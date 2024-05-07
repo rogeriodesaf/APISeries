@@ -2,6 +2,7 @@
 using APISeries.DTO;
 using APISeries.Models;
 using APISeries.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISeries.Services
 {
@@ -12,19 +13,90 @@ namespace APISeries.Services
         {
             _context = context;
         }
-        public Task<ResponseModel<List<SeriesModel>>> deleteSeries(int id)
+        public async Task<ResponseModel<List<SeriesModel>>> deleteSeries(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<SeriesModel>> response = new ResponseModel<List<SeriesModel>>();
+            try
+            {
+                var series = await _context.Serie
+                    .FirstOrDefaultAsync(a => a.Id == id);
+                if(series == null)
+                {
+                    response.Mensagem = "Dados não encontrados!";
+                    response.Status = false;
+                    return response;
+                }
+
+                _context.Remove(series);
+                await _context.SaveChangesAsync();  
+
+                response.Dados = await _context.Serie.Include(a =>a.Categoria).ToListAsync();
+                response.Mensagem = "Série deletada com sucesso.";
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
+            return response;
         }
 
-        public Task<ResponseModel<List<SeriesModel>>> getSeries()
+        public async Task<ResponseModel<List<SeriesModel>>> getSeries()
         {
-            throw new NotImplementedException();
+            ResponseModel<List<SeriesModel>> response = new ResponseModel<List<SeriesModel>>();
+            try
+            {
+                var series = await _context.Serie.ToListAsync();
+                if (series == null)
+                {
+                    response.Mensagem = "Serie não encontrada";
+                    response.Status = false;
+                    return response;
+                }
+
+                response.Dados = await _context.Serie.Include(a => a.Categoria).ToListAsync();
+                response.Mensagem = "Consulta feita com sucesso!";
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
+            return response;
         }
 
-        public Task<ResponseModel<SeriesModel>> getSeriesById(int id)
+        public async Task<ResponseModel<SeriesModel>> getSeriesById(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel<SeriesModel> response = new ResponseModel<SeriesModel>();
+            try 
+	{	        
+                var serie = await _context.Serie.Include(a => a.Categoria)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+              if(serie == null) 
+                {
+                    response.Mensagem = "Dados não encontrados";
+                    response.Status=false;      
+                    return response;
+                }
+
+                response.Dados = serie;
+                  
+                response.Mensagem = "Série retornada com sucesso!";
+
+		
+	}
+	catch (Exception ex)
+	{
+
+		response.Mensagem = ex.Message;
+        response.Status= false; 
+        return  response;
+	}
+            return response;
         }
 
         public Task<ResponseModel<List<SeriesModel>>> getSeriesByIdCategory(int id)

@@ -25,5 +25,15 @@ namespace APISeries.Controllers
             }
             return Ok(categoria);
         }
+        [HttpGet("ListarCategorias")]
+        public async Task<ActionResult<List<CategoriaModel>>> getCategoria()
+        {
+            var categoria = await _categoryInterface.getCategoria();
+            if(categoria.Dados == null)
+            {
+                return NotFound(categoria.Mensagem);
+            }
+            return Ok(categoria);
+        }
     }
 }

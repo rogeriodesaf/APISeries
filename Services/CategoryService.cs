@@ -2,6 +2,7 @@
 using APISeries.DTO;
 using APISeries.Models;
 using APISeries.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISeries.Services
 {
@@ -18,9 +19,30 @@ namespace APISeries.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<List<CategoriaModel>>> getCategoria()
+        public async Task<ResponseModel<List<CategoriaModel>>> getCategoria()
         {
-            throw new NotImplementedException();
+            ResponseModel<List<CategoriaModel>> response = new ResponseModel<List<CategoriaModel>>();
+            try
+            {
+                var categoria = await _context.Categoria.ToListAsync();
+                if(categoria is null)
+                {
+                    response.Mensagem = "Dados não encontrados";
+                    response.Status = false;
+                    return response;
+                }
+
+                response.Dados = await _context.Categoria.ToListAsync();
+                response.Mensagem = "Dados retornados com sucesso!";
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
+            return response;
         }
 
         public Task<ResponseModel<CategoriaModel>> getCategoriaById(int id)

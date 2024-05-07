@@ -6,7 +6,7 @@ namespace APISeries.Services.Interfaces
     public interface ISerieInterface
     {
 
-        public Task<ResponseModel<List<SeriesModel>>> getSeries();
+        public  Task<ResponseModel<List<SeriesModel>>> getSeries();
         public Task<ResponseModel<SeriesModel>> getSeriesById(int id);
         public Task<ResponseModel<List<SeriesModel>>> getSeriesByIdCategory(int id);
         public Task<ResponseModel<List<SeriesModel>>> postSeries(SerieCriacaoDto serieCriacaoDto);

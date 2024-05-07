@@ -25,6 +25,38 @@ namespace APISeries.Controllers
             }
             return Ok(serie);
         }
-        
+        [HttpGet("ListarSerie")]
+        public async Task<ActionResult<List<SeriesModel>>> getSeries()
+        {
+            var serie = await _serieInterface.getSeries();
+            if (serie.Dados == null)
+            {
+                return NotFound(serie.Mensagem);
+            }
+            return Ok(serie);
+        }
+
+        [HttpDelete("DeletarSerie/{id}")]
+        public async Task<ActionResult<List<SeriesModel>>> deleteSeries(int id)
+        {
+            var serie = await _serieInterface.deleteSeries(id);
+            if (serie.Dados == null)
+            {
+                return NotFound(serie.Mensagem);
+            }
+            return Ok(serie);
+        }
+
+        [HttpGet("ListarSeriePorId/{id}")]
+        public async Task<ActionResult<SeriesModel>> getSeriesById(int id)
+        {
+            var serie = await _serieInterface.getSeriesById(id);
+            if(serie.Dados is null)
+            {
+               return NotFound( serie.Mensagem ); 
+            }
+            return Ok(serie);
+        }
+
     }
 }
