@@ -35,5 +35,25 @@ namespace APISeries.Controllers
             }
             return Ok(categoria);
         }
+        [HttpGet("ListarCategoriaPorId/{id}")]
+        public async Task<ActionResult<CategoriaModel>> getCategoriaById(int id)
+        {
+            var categoria = await _categoryInterface.getCategoriaById(id);    
+            if(categoria.Dados == null)
+            {
+                return NotFound(categoria.Mensagem);
+            }
+            return Ok(categoria);
+        }
+        [HttpGet("ListarCategoriaPorIdSerie/{id}")]
+        public async Task<ActionResult<CategoriaModel>> getCategoriaByIdSerie(int id)
+        {
+            var categoria = await _categoryInterface.getCategoriaByIdSerie(id);
+            if (categoria.Dados == null)
+            {
+                return NotFound(categoria.Mensagem);
+            }
+            return Ok(categoria);
+        }
     }
 }

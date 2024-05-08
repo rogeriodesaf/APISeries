@@ -99,9 +99,30 @@ namespace APISeries.Services
             return response;
         }
 
-        public Task<ResponseModel<List<SeriesModel>>> getSeriesByIdCategory(int id)
+        public async Task<ResponseModel<List<SeriesModel>>> getSeriesByIdCategory(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<SeriesModel>> response = new ResponseModel<List<SeriesModel>>();
+            try
+            {
+                var series = await _context.Categoria.Include(a => a.Series)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+                if(series is null)
+                {
+                    response.Mensagem = "Dados não encontrados";
+                    response.Status = false;
+                    return response;
+                }
+                response.Dados = series.Series.ToList();    
+                response.Mensagem = "Dados retornados com sucesso";
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
+            return response;
         }
 
         public async Task<ResponseModel<List<SeriesModel>>> postSeries(SerieCriacaoDto serieCriacaoDto)

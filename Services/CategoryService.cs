@@ -45,14 +45,60 @@ namespace APISeries.Services
             return response;
         }
 
-        public Task<ResponseModel<CategoriaModel>> getCategoriaById(int id)
+        public async Task<ResponseModel<CategoriaModel>> getCategoriaById(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel<CategoriaModel> response = new ResponseModel<CategoriaModel>();
+            try
+            {
+                var categoria = await _context.Categoria.FirstOrDefaultAsync(a => a.Id == id);
+                if(categoria is null)
+                {
+                    response.Mensagem = "Dados não encontrados!";
+                    response.Status = false;
+                    return response;
+                }
+
+                response.Dados = categoria;
+                response.Mensagem = "Dados retornados com sucesso!";
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
+            return response;
         }
 
-        public Task<ResponseModel<List<CategoriaModel>>> getCategoriaByIdCategory(int id)
+        public async Task<ResponseModel<CategoriaModel>> getCategoriaByIdSerie(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel< CategoriaModel> response = new ResponseModel<CategoriaModel>();
+            try
+            {
+                var categoria = await _context.Serie.Include(a => a.Categoria)
+                    .FirstOrDefaultAsync(b => b.Id == id);
+                     
+                if(categoria is null)
+                {
+                    response.Mensagem = "Erro";
+                    response.Status = false;
+                    return response;
+
+                }
+
+                response.Mensagem = "Dados retornados com sucesso!";
+                response.Dados = categoria.Categoria;
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status= false;
+                return response;
+            }
+            return response;
         }
 
         public async Task<ResponseModel<List<CategoriaModel>>> postCategoria(CategoriaCriacaoDto categoriaCriacaoDto)

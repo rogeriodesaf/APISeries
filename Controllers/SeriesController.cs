@@ -58,5 +58,16 @@ namespace APISeries.Controllers
             return Ok(serie);
         }
 
+        [HttpGet("ListarSeriePorIdCategoria/{id}")]
+        public async Task<ActionResult<List<SeriesModel>>> getSeriesByIdCategory(int id)
+        {
+            var serie = await _serieInterface.getSeriesByIdCategory(id);
+            if (serie.Dados is null)
+            {
+                return NotFound(serie.Mensagem);
+            }
+            return Ok(serie);
+        }
+
     }
 }
