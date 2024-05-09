@@ -55,5 +55,26 @@ namespace APISeries.Controllers
             }
             return Ok(categoria);
         }
+
+        [HttpPut("CategoriaEditada")]
+        public async Task<ActionResult<List<CategoriaModel>>> putCategoria(CategoriaEdicaoDto categoriaEdicaoDto)
+        {
+            var categoria = await _categoryInterface.putCategoria(categoriaEdicaoDto);  
+            if(categoria.Dados is null)
+            {
+                return NotFound(categoria.Mensagem);
+            }
+            return Ok(categoria);
+        }
+        [HttpDelete("CategoriaDeletar/{id}")]
+        public async Task<ActionResult<List<CategoriaModel>>> deleteCategorias(int id)
+        {
+            var categoria = await _categoryInterface.deleteCategorias(id);  
+            if (categoria.Dados is null)
+            {
+                return NotFound(categoria.Mensagem);
+            }
+            return Ok(categoria);
+        }
     }
 }

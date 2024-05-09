@@ -68,6 +68,16 @@ namespace APISeries.Controllers
             }
             return Ok(serie);
         }
+        [HttpPut("EditarSeries")]
+        public async Task<ActionResult<List<SeriesModel>>> putSeries(SerieEdicaoDto serieEdicaoDto)
+        {
+            var serie = await _serieInterface.putSeries(serieEdicaoDto);
+            if (serie.Dados is null)
+            {
+                return NotFound(serie.Mensagem);
+            }
+            return Ok(serie.Dados);
+        }
 
     }
 }

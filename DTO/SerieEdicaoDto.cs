@@ -4,9 +4,9 @@ namespace APISeries.DTO
 {
     public class SerieEdicaoDto
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
 
-        CategoriaVinculoDto Categoria { get; set; }
+       public  CategoriaVinculoDto Categoria { get; set; }
     }
 }

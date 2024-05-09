@@ -9,7 +9,7 @@ namespace APISeries.Services.Interfaces
         public Task<ResponseModel<CategoriaModel>> getCategoriaById(int id);
         public Task<ResponseModel<CategoriaModel>> getCategoriaByIdSerie(int id);
         public Task<ResponseModel<List<CategoriaModel>>> postCategoria(CategoriaCriacaoDto categoriaCriacaoDto);
-        public Task<ResponseModel<List<CategoriaModel>>> putCategoria(CategoriaCriacaoDto categoriaEdicaoDto);
+        public Task<ResponseModel<List<CategoriaModel>>> putCategoria(CategoriaEdicaoDto categoriaEdicaoDto);
         public Task<ResponseModel<List<CategoriaModel>>> deleteCategorias(int id);
 
     }

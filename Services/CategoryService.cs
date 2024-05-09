@@ -14,9 +14,27 @@ namespace APISeries.Services
             _context = appDbContext;
         }
     
-        public Task<ResponseModel<List<CategoriaModel>>> deleteCategorias(int id)
+        public async  Task<ResponseModel<List<CategoriaModel>>> deleteCategorias(int id)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<CategoriaModel>> response = new ResponseModel<List<CategoriaModel>>();
+            try
+            {
+                var categoria = await _context.Categoria
+                    .FirstOrDefaultAsync(a =>a.Id == id);
+                //validation
+
+                _context.Categoria.Remove(categoria);
+                await _context.SaveChangesAsync();
+                response.Dados = await _context.Categoria.ToListAsync();
+                response.Mensagem = "Sucess";
+                return response;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<ResponseModel<List<CategoriaModel>>> getCategoria()
@@ -128,9 +146,39 @@ namespace APISeries.Services
             return response;
         }
 
-        public Task<ResponseModel<List<CategoriaModel>>> putCategoria(CategoriaCriacaoDto categoriaEdicaoDto)
+        public async Task<ResponseModel<List<CategoriaModel>>> putCategoria(CategoriaEdicaoDto categoriaEdicaoDto)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<CategoriaModel>> response = new ResponseModel<List<CategoriaModel>>();
+            try
+            {
+                var categoria = await _context.Categoria
+                    .FirstOrDefaultAsync(a => a.Id == categoriaEdicaoDto.Id);
+                //validation
+
+                categoria.Tipo = categoriaEdicaoDto.Tipo;
+
+                _context.Categoria.Update(categoria);
+                await _context.SaveChangesAsync();
+
+                response.Dados =  await _context.Categoria.ToListAsync();
+                response.Mensagem = "Sucess";
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+            }
         }
+
+
+
+
+
+
+
     }
 }

@@ -163,9 +163,55 @@ namespace APISeries.Services
             return response;
         }
 
-        public Task<ResponseModel<List<SeriesModel>>> putSeries(SerieEdicaoDto serieEdicaoDto)
+        public async Task<ResponseModel<List<SeriesModel>>> putSeries(SerieEdicaoDto serieEdicaoDto)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<SeriesModel>> response = new ResponseModel<List<SeriesModel>>();
+            try
+            {
+                var series = await _context.Serie
+                    .Include(x => x.Categoria)
+                    .FirstOrDefaultAsync(a => a.Id == serieEdicaoDto.Id);
+                if(series is null)
+                {
+                    response.Mensagem = "deu erro";
+                    response.Status = false;
+                    return response;
+                }
+              // Atualize as propriedades da série com base no DTO
+                    series.Nome = serieEdicaoDto.Nome;
+
+                    
+                        // Carregue a nova categoria do banco de dados
+              var novaCategoria = await _context.Categoria.FindAsync(serieEdicaoDto.Categoria.Id);
+                if(novaCategoria != null)
+                {
+                    // Atribua a nova categoria à série
+                    series.Categoria = novaCategoria;
+
+                }
+
+                else
+                {
+                    // Marque a série como modificada e salve as alterações
+                    _context.Serie.Update(series);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                
+
+                    // Atualize a resposta com os dados mais recentes do banco de dados
+                    response.Dados = await _context.Serie.Include(a => a.Categoria).ToListAsync();
+                    response.Mensagem = "Dados atualizados com sucesso!";
+                
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = "Erro ao atualizar a série: " + ex.Message;
+                response.Status = false;
+            }
+            return response;
         }
+
     }
 }
